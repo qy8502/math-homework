@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数学</title>
+    <style type="text/css">
+        h3{ margin-bottom: 0}
+        @media print {
+            .header, .footer {
+                display: none;
+            }
+
+            .noPrint {
+                VISIBILITY: hidden;
+            }
+            .content {
+                margin-top: -50px;
+                width: 100%;
+            }
+        }
+
+        .content {
+            width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .da {
+            display: none;
+            color: #999;
+        }
+
+        ul {
+            padding-inline-start: 0;
+            padding-left: 0;
+            margin-bottom: 30px;
+        }
+
+        body {
+            font-family: Helvetica, Hiragino Sans GB, Microsoft Yahei, sans-serif;
+            font-size: 14px;
+        }
+
+        #ks-list, #ks-list li, #ss-list, #ss-list li, #ts-list, #ts-list li {
+            list-style: none; /* 将默认的列表符号去掉 */
+            /* padding: 0; !* 将默认的内边距去掉 *!
+             margin: 0; !* 将默认的外边距去掉 *!*/
+        }
+
+        #ks-list li, #ss-list li, #ts-list li {
+            height: 40px;
+            line-height: 30px;
+            width: 20%;
+            display: inline-block;
+        }
+
+        #ss-list li {
+            height: 130px;
+        }
+
+        #ts-list li {
+            height: 120px;
+        }
+
+        span.fraction {
+            display: inline-block;
+        }
+
+        span.fraction > span {
+            display: block;
+            line-height: 20px;
+            padding: 0 2px;
+            position: relative;
+            top: 10px;
+        }
+
+        span.fraction > span:first-child {
+            border-bottom: 1px solid #515151;
+        }
+
+        span.fraction > span:last-child {
+        }
+
+    </style>
+    <script type="text/javascript">
+        window.onload = function () {
+            //口算 等于
+            var elkslist = document.getElementById("ks-list");
+            var tilist = [];
+            for (var i = 0; i < 5; i++) {
+                tilist.push(jia10());
+            }
+            for (var i = 0; i < 5; i++) {
+                tilist.push(jia100());
+            }
+            for (var i = 0; i < 5; i++) {
+                tilist.push(jian10());
+            }
+            for (var i = 0; i < 5; i++) {
+                tilist.push(jian100());
+            }
+            for (var i = 0; i < 3; i++) {
+                tilist.push(cheng10());
+            }
+            for (var i = 0; i < 2; i++) {
+                tilist.push(chu10());
+            }
+            for (var i = 0; i < 2; i++) {
+                tilist.push(fen_jia());
+            }
+            for (var i = 0; i < 2; i++) {
+                tilist.push(fen_jian());
+            }
+            tilist.sort(randomSort);
+            for (var i = 0; i < tilist.length; i++) {
+                var elks = document.createElement('li');
+                //elks.setAttribute('class', 'ks');
+                elks.innerHTML = tilist[i][0] + " = " + "<span class='da'>" + tilist[i][1] + "</span>";
+                elkslist.appendChild(elks);
+            }
+
+
+            //口算 约等于
+            tilist = [];
+            for (var i = 0; i < 1; i++) {
+                tilist.push(jia10());
+            }
+            for (var i = 0; i < 2; i++) {
+                tilist.push(jia100());
+            }
+            for (var i = 0; i < 2; i++) {
+                tilist.push(jian100());
+            }
+            tilist.sort(randomSort);
+            for (var i = 0; i < tilist.length; i++) {
+                var elks = document.createElement('li');
+                //elks.setAttribute('class', 'ks');
+                elks.innerHTML = tilist[i][0] + " ≈ " + "<span class='da'>" + tilist[i][1] + "</span>";
+                elkslist.appendChild(elks);
+            }
+
+
+            //竖式
+            var elsslist = document.getElementById("ss-list");
+            var tilist = [];
+            for (var i = 0; i < 4; i++) {
+                tilist.push(jia100());
+            }
+            for (var i = 0; i < 4; i++) {
+                tilist.push(jian100());
+            }
+            for (var i = 0; i < 2; i++) {
+                tilist.push(chu10());
+            }
+            for (var i = 0; i < 1; i++) {
+                tilist.push(cheng10_100());
+            }
+            for (var i = 0; i < 1; i++) {
+                tilist.push(cheng100_10());
+            }
+            tilist.sort(randomSort);
+            for (var i = 0; i < tilist.length; i++) {
+                var elss = document.createElement('li');
+                elss.innerHTML = tilist[i][0] + " = " + "<span class='da'>" + tilist[i][1] + "</span>";
+                elsslist.appendChild(elss);
+            }
+
+
+            //托式
+            var eltslist = document.getElementById("ts-list");
+            var tilist = [];
+            for (var i = 0; i < 2; i++) {
+                tilist.push(tuo_chu());
+            }
+            for (var i = 0; i < 2; i++) {
+                tilist.push(tuo_cheng());
+            }
+            for (var i = 0; i < 3; i++) {
+                tilist.push(tuo_jia());
+            }
+            for (var i = 0; i < 3; i++) {
+                tilist.push(tuo_jian());
+            }
+            tilist.sort(randomSort);
+            for (var i = 0; i < tilist.length; i++) {
+                var elts = document.createElement('li');
+                elts.innerHTML = tilist[i][0] + " = " + "<span class='da'>" + tilist[i][1] + "</span>";
+                eltslist.appendChild(elts);
+            }
+        };
+
+        //十位数加法
+        function jia10() {
+            while (true) {
+                var a = randomNum(10, 99);
+                var b = randomNum(10, 99);
+                if ((a % 10 + b % 10 > 9) ||
+                    ((a / 10) % 10 + (b / 10) % 10 > 8)) {
+                    return ["" + a + " + " + b, a + b];
+                }
+            }
+
+        }
+
+        //百位数加法
+        function jia100() {
+            while (true) {
+                var a = randomNum(100, 999);
+                var b = randomNum(100, 999);
+                if ((a % 10 + b % 10 > 9) ||
+                    ((a / 10) % 10 + (b / 10) % 10 > 8) ||
+                    ((a / 100) % 10 + (b / 100) % 10 > 8)) {
+                    return ["" + a + " + " + b, a + b];
+                }
+            }
+
+        }
+
+        //十位数减法
+        function jian10() {
+            while (true) {
+                var a = randomNum(10, 99);
+                var b = randomNum(10, 99);
+                if (a > b &&
+                    (a % 10 < b % 10)) {
+                    return ["" + a + " - " + b, a - b];
+                }
+            }
+
+        }
+
+        //百位数减法
+        function jian100() {
+            while (true) {
+                var a = randomNum(100, 999);
+                var b = randomNum(10, 999);
+                if (a > b &&
+                    ((a % 10 < b % 10) ||
+                        ((a / 10) % 10 < (b / 10) % 10))) {
+                    return ["" + a + " - " + b, a - b];
+                }
+            }
+
+        }
+
+        //乘法
+        function cheng10() {
+            while (true) {
+                var a = randomNum(3, 99);
+                var b = randomNum(3, 99);
+                if (("" + a + b).length === 3) {
+                    return ["" + a + " × " + b, a * b];
+                }
+            }
+
+        }
+
+        //乘法X*XXX
+        function cheng10_100() {
+            while (true) {
+                var a;
+                if (randomNum(0, 99) > 10) {
+                    var a = randomNum(5, 9);
+                } else {
+                    var a = randomNum(2, 4);
+                }
+                var b = randomNum(101, 999);
+                if (("" + a + b).length > 3) {
+                    return ["" + a + " × " + b, a * b];
+                }
+            }
+
+        }
+
+        //乘法X*XXX
+        function cheng100_10() {
+            while (true) {
+                var a, b;
+                if (randomNum(0, 99) > 10) {
+                    var a = randomNum(5, 9);
+                } else {
+                    var a = randomNum(2, 4);
+                }
+                if (randomNum(0, 99) > 3) {
+                    b = randomNum(101, 999);
+                } else {
+                    b = randomNum(11, 99);
+                }
+                if (("" + a + b).length > 3) {
+                    return ["" + b + " × " + a, a * b];
+                }
+            }
+
+        }
+
+        //除法
+        function chu10() {
+            while (true) {
+                var a = randomNum(19, 99);
+                var b = randomNum(2, 9);
+                if (1 == 1) {
+                    return ["" + a + " ÷ " + b, Math.floor(a / b) + ((a % b) ? "···" + (a % b) : "")];
+                }
+            }
+
+        }
+
+        //分数数加法
+        function fen_jia() {
+            while (true) {
+                var m
+                if (randomNum(0, 99) > 10) {
+                    m = randomNum(5, 9);
+                } else {
+                    m = randomNum(2, 4);
+                }
+                var z1 = randomNum(1, m - 1);
+                var z2 = randomNum(1, m - z1);
+                return ["<span class='fraction'><span>" + z1 + "</span><span>" + m + "</span></span> + <span class='fraction'><span>" + z2 + "</span><span>" + m + "</span></span>",
+                    (z1 + z2) === m ? "1" : "<span class='fraction'><span>" + (z1 + z2) + "</span><span>" + m + "</span></span>"];
+            }
+
+        }
+
+        //分数数加法
+        function fen_jian() {
+            while (true) {
+                var m
+                if (randomNum(0, 99) > 20) {
+                    m = randomNum(5, 9);
+                } else {
+                    m = randomNum(2, 4);
+                }
+                var z1 = randomNum(randomNum(0, 99) > 10 ? Math.round(m / 2) : 2, m);
+                var z2 = randomNum(1, z1 === m || (z1 > 2 && randomNum(0, 99) > 10) ? z1 - 1 : z1);
+                return [(z1 === m ? "1" : "<span class='fraction'><span>" + z1 + "</span><span>" + m + "</span></span>") +
+                " - <span class='fraction'><span>" + z2 + "</span><span>" + m + "</span></span>",
+                    (z1 - z2) === 0 ? "0" : "<span class='fraction'><span>" + (z1 - z2) + "</span><span>" + m + "</span></span>"];
+            }
+
+        }
+
+        //托式加法
+        function tuo_jia() {
+            while (true) {
+                var a = randomNum(30, 99);
+                var b = randomNum(30, 99);
+                if (a + b < 100) {
+                    if (randomNum(0, 1)) {
+                        return ["" + tuoshi(a, false) + " + " + b, a + b];
+                    } else {
+                        return ["" + a + " + " + tuoshi(b, false, true), a + b];
+                    }
+                }
+            }
+
+        }
+
+        //托式减法
+        function tuo_jian() {
+            while (true) {
+                var a = randomNum(40, 99);
+                var b = randomNum(10, 99);
+                if (a - b > 2) {
+                    if (randomNum(0, 1)) {
+                        return ["" + tuoshi(a, false) + " - " + b, a - b];
+                    } else {
+                        return ["" + a + " - " + tuoshi(b, true, true), a - b];
+                    }
+                }
+            }
+
+        }
+
+
+        //托式除法
+        function tuo_chu() {
+            while (true) {
+                var a = randomNum(19, 99);
+                var b = randomNum(2, 9);
+                if (a % b == 0) {
+                    if (randomNum(0, 1)) {
+                        return ["" + tuoshi(a, true) + " ÷ " + b, a / b];
+                    } else {
+                        return ["" + a + " ÷ " + tuoshi(b, true, true), a / b];
+                    }
+                }
+            }
+
+        }
+
+        //托式乘法
+        function tuo_cheng() {
+            while (true) {
+                var a = randomNum(2, 99);
+                var b = randomNum(2, 99);
+                if (a * b < 100 && a * b > 18) {
+                    if (randomNum(0, 1)) {
+                        return ["" + tuoshi(a, true) + " × " + b, a * b];
+                    } else {
+                        return ["" + a + " × " + tuoshi(b, true, true), a * b];
+                    }
+                }
+            }
+
+        }
+
+        var chengfabiao = {};
+        for (var i = 2; i < 10; i++) {
+            for (var j = 2; j < 10; j++) {
+                var r = i * j;
+                if (r > 10) {
+                    if (!chengfabiao[r]) {
+                        chengfabiao[r] = [];
+                    }
+                    chengfabiao[r].push([i, j]);
+                }
+            }
+        }
+
+        function tuoshi(r, sub, notfirst) {
+            var a, b;//, r = randomNum(min, max);
+            if (r < 10 && randomNum(0, 1)) {
+                b = randomNum(2, 9);
+                a = r * b;
+                return (sub && notfirst ? "(" : "") + a + " ÷ " + b + (sub && notfirst ? ")" : "")
+            } else if (chengfabiao[r] && randomNum(0, 1)) {
+                var i = randomNum(0, chengfabiao[r].length - 1);
+                return "" + chengfabiao[r][i][0] + " × " + chengfabiao[r][i][1]
+            } else if (r < 20 || !randomNum(0, 1)) {
+                b = randomNum(10, 99 - r);
+                a = b + r;
+                return (sub ? "(" : "") + a + " - " + b + (sub ? ")" : "")
+            } else {
+                b = randomNum(10, r - 10);
+                a = r - b;
+                return (sub ? "(" : "") + a + " + " + b + (sub ? ")" : "")
+            }
+        }
+
+
+        function randomNum(minNum, maxNum) {
+            var Range = maxNum - minNum;
+            var Rand = Math.random();
+            var num = minNum + Math.round(Rand * Range); //四舍五入
+            return num;
+            //return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
+        }
+
+        function randomSort(a, b) {
+            return Math.random() > 0.5 ? -1 : 1;
+        }
+
+        function showda() {
+            document.getElementById("showda").style.display = "none";
+            document.getElementById("hideda").style.display = "inline-block";
+            var els = document.getElementsByClassName('da');
+            for (var i = 0; i < els.length; i++) {
+                els[i].style.display = "inherit";
+            }
+        }
+
+        function hideda() {
+            document.getElementById("hideda").style.display = "none";
+            document.getElementById("showda").style.display = "inline-block";
+            var els = document.getElementsByClassName('da');
+            for (var i = 0; i < els.length; i++) {
+                els[i].style.display = "none";
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="content">
+    <button class="noPrint" onclick="location.reload();">换一套</button>
+    <button class="noPrint" id="showda" onclick="showda()">显示答案</button>
+    <button class="noPrint" id="hideda" style="display: none" onclick="hideda()">隐藏答案</button>
+    <h3>
+        一、 口算
+    </h3>
+    <ul id="ks-list"></ul>
+    <h3>
+        二、 竖式计算
+    </h3>
+    <ul id="ss-list"></ul>
+    <h3>
+        三、 脱式计算
+    </h3>
+    <ul id="ts-list"></ul>
+</div>
+</body>
+</html>
