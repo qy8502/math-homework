@@ -145,7 +145,7 @@
             //竖式参数
             sets['s_jia100'] = isNaN(req['s_jia100']) ? 2 : req['s_jia100'];
             sets['s_jian100'] = isNaN(req['s_jian100']) ? 2 : req['s_jian100'];
-            sets['s_chu10'] = isNaN(req['s_chu10']) ? 4 : req['s_chu10'];
+            sets['s_chu100'] = isNaN(req['s_chu100']) ? 4 : req['s_chu100'];
             sets['s_cheng1_100'] = isNaN(req['s_cheng1_100']) ? 2 : req['s_cheng1_100'];
 
 
@@ -229,8 +229,8 @@
             for (var i = 0; i < sets['s_jian100']; i++) {
                 tilist.push(jian100());
             }
-            for (var i = 0; i < sets['s_chu10']; i++) {
-                tilist.push(chu10());
+            for (var i = 0; i < sets['s_chu100']; i++) {
+                tilist.push(chu100());
             }
             for (var i = 0; i < sets['s_cheng1_100']; i++) {
                 tilist.push(cheng1_100());
@@ -378,6 +378,17 @@
         function chu10() {
             while (true) {
                 var a = randomNum(19, 99);
+                var b = randomNum(2, 9);
+                if (1 == 1) {
+                    return ["" + a + " ÷ " + b, Math.floor(a / b) + ((a % b) ? "···" + (a % b) : "")];
+                }
+            }
+
+        }
+        //除法
+        function chu100() {
+            while (true) {
+                var a = randomNum(100, 999);
                 var b = randomNum(2, 9);
                 if (1 == 1) {
                     return ["" + a + " ÷ " + b, Math.floor(a / b) + ((a % b) ? "···" + (a % b) : "")];
@@ -677,8 +688,8 @@
             <input class="set" type="number" id="s_cheng1_100"/> 道题
         </li>
         <li>
-            <lable>除法（十位除个位）</lable>
-            <input class="set" type="number" id="s_chu10"/> 道题
+            <lable>除法（百位除个位）</lable>
+            <input class="set" type="number" id="s_chu100"/> 道题
         </li>
     </ul>
     <ul id="ss-list"></ul>
