@@ -14,11 +14,10 @@
             }
 
             .noPrint {
-                VISIBILITY: hidden;
+                display: none !important;
             }
 
             .content {
-                margin-top: -50px;
                 width: 100%;
             }
         }
@@ -598,6 +597,7 @@
 </head>
 <body>
 <div class="content">
+    <button class="noPrint" onclick="javascript:window.print();">打印</button>
     <button class="noPrint" onclick="location.reload();">换一套</button>
     <button class="noPrint" id="showda" onclick="showda()">显示答案</button>
     <button class="noPrint" id="hideda" style="display: none" onclick="hideda()">隐藏答案</button>
@@ -605,7 +605,8 @@
     <button class="noPrint" id="showset" onclick="showset()">设置题型</button>
     <button class="noPrint" id="hideset" style="display: none" onclick="hideset()">取消设置</button>
     <button class="noPrint" id="set" style="display: none" onclick="set()">完成设置</button>
-    <p class="sets">完成设置后，重新复制保存或收藏分享地址方便以后使用。</p>
+    <p class="sets noPrint">完成设置后，重新复制保存或收藏分享地址方便以后使用。</p>
+    <div></div>
     <h3>
         一、 口算
     </h3>
@@ -643,7 +644,6 @@
             <input class="set" type="number" id="k_fen_jian"/> 道题
         </li>
     </ul>
-
     <ul class="sets noPrint">
         <li>
             <lable>估算加法（十位）</lable>
