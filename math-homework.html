@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <title>数学</title>
     <style type="text/css">
-        h3{ margin-bottom: 0}
+        h3 {
+            margin-bottom: 0
+        }
+
         @media print {
             .header, .footer {
                 display: none;
@@ -13,6 +16,7 @@
             .noPrint {
                 VISIBILITY: hidden;
             }
+
             .content {
                 margin-top: -50px;
                 width: 100%;
@@ -41,7 +45,11 @@
             font-size: 14px;
         }
 
-        #ks-list, #ks-list li, #ss-list, #ss-list li, #ts-list, #ts-list li {
+        .sets {
+            display: none;
+        }
+
+        .sets li, #ks-list, #ks-list li, #ss-list, #ss-list li, #ts-list, #ts-list li {
             list-style: none; /* 将默认的列表符号去掉 */
             /* padding: 0; !* 将默认的内边距去掉 *!
              margin: 0; !* 将默认的外边距去掉 *!*/
@@ -81,34 +89,97 @@
         span.fraction > span:last-child {
         }
 
+        .sets {
+            padding: 16px;
+            background-color: #eee;
+        }
+
+        .sets li {
+            height: 40px;
+            line-height: 30px;
+            width: 45%;
+            display: inline-block;
+        }
+
+        .sets li input {
+            width: 50px;
+        }
     </style>
     <script type="text/javascript">
+        var sets = {};
         window.onload = function () {
+            function GetRequest() {
+                var url = location.search; //获取url中"?"符后的字串
+                var theRequest = new Object();
+                if (url.indexOf("?") != -1) {
+                    var str = url.substr(1);
+                    strs = str.split("&");
+                    for (var i = 0; i < strs.length; i++) {
+                        theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                    }
+                }
+                return theRequest;
+            }
+
+            var req = GetRequest();
+
+            //口算参数
+            sets['k_jia10'] = isNaN(req['k_jia10']) ? 0 : req['k_jia10'];
+            sets['k_jia100'] = isNaN(req['k_jia100']) ? 2 : req['k_jia100'];
+            sets['k_jian10'] = isNaN(req['k_jian10']) ? 0 : req['k_jian10'];
+            sets['k_jian100'] = isNaN(req['k_jian100']) ? 2 : req['k_jian100'];
+            sets['k_cheng10'] = isNaN(req['k_cheng10']) ? 3 : req['k_cheng10'];
+            sets['k_chu10'] = isNaN(req['k_chu10']) ? 5 : req['k_chu10'];
+            sets['k_fen_jia'] = isNaN(req['k_fen_jia']) ? 1 : req['k_fen_jia'];
+            sets['k_fen_jian'] = isNaN(req['k_fen_jian']) ? 2 : req['k_fen_jian'];
+
+            //估算（约定于）参数
+            sets['g_jia10'] = isNaN(req['g_jia10']) ? 0 : req['g_jia10'];
+            sets['g_jia100'] = isNaN(req['g_jia100']) ? 1 : req['g_jia100'];
+            sets['g_jian10'] = isNaN(req['g_jian10']) ? 0 : req['g_jian10'];
+            sets['g_jian100'] = isNaN(req['g_jian100']) ? 1 : req['g_jian100'];
+            sets['g_cheng10'] = isNaN(req['g_cheng10']) ? 1 : req['g_cheng10'];
+            sets['g_chu10'] = isNaN(req['g_chu10']) ? 2 : req['g_chu10'];
+
+
+            //竖式参数
+            sets['s_jia100'] = isNaN(req['s_jia100']) ? 2 : req['s_jia100'];
+            sets['s_jian100'] = isNaN(req['s_jian100']) ? 2 : req['s_jian100'];
+            sets['s_chu10'] = isNaN(req['s_chu10']) ? 4 : req['s_chu10'];
+            sets['s_cheng1_100'] = isNaN(req['s_cheng1_100']) ? 2 : req['s_cheng1_100'];
+
+
+            //托式参数
+            sets['t_chu'] = isNaN(req['t_chu']) ? 3 : req['t_chu'];
+            sets['t_cheng'] = isNaN(req['t_cheng']) ? 3 : req['t_cheng'];
+            sets['t_jia'] = isNaN(req['t_jia']) ? 2 : req['t_jia'];
+            sets['t_jian'] = isNaN(req['t_jian']) ? 2 : req['t_jian'];
+
             //口算 等于
             var elkslist = document.getElementById("ks-list");
             var tilist = [];
-            for (var i = 0; i < 5; i++) {
+            for (var i = 0; i < sets['k_jia10']; i++) {
                 tilist.push(jia10());
             }
-            for (var i = 0; i < 5; i++) {
+            for (var i = 0; i < sets['k_jia100']; i++) {
                 tilist.push(jia100());
             }
-            for (var i = 0; i < 5; i++) {
+            for (var i = 0; i < sets['k_jian10']; i++) {
                 tilist.push(jian10());
             }
-            for (var i = 0; i < 5; i++) {
+            for (var i = 0; i < sets['k_jian100']; i++) {
                 tilist.push(jian100());
             }
-            for (var i = 0; i < 3; i++) {
+            for (var i = 0; i < sets['k_cheng10']; i++) {
                 tilist.push(cheng10());
             }
-            for (var i = 0; i < 2; i++) {
+            for (var i = 0; i < sets['k_chu10']; i++) {
                 tilist.push(chu10());
             }
-            for (var i = 0; i < 2; i++) {
+            for (var i = 0; i < sets['k_fen_jia']; i++) {
                 tilist.push(fen_jia());
             }
-            for (var i = 0; i < 2; i++) {
+            for (var i = 0; i < sets['k_fen_jian']; i++) {
                 tilist.push(fen_jian());
             }
             tilist.sort(randomSort);
@@ -120,16 +191,25 @@
             }
 
 
-            //口算 约等于
+            //估算（口算 约等于）
             tilist = [];
-            for (var i = 0; i < 1; i++) {
+            for (var i = 0; i < sets['g_jia10']; i++) {
                 tilist.push(jia10());
             }
-            for (var i = 0; i < 2; i++) {
+            for (var i = 0; i < sets['g_jia100']; i++) {
                 tilist.push(jia100());
             }
-            for (var i = 0; i < 2; i++) {
+            for (var i = 0; i < sets['g_jian10']; i++) {
+                tilist.push(jian10());
+            }
+            for (var i = 0; i < sets['g_jian100']; i++) {
                 tilist.push(jian100());
+            }
+            for (var i = 0; i < sets['g_cheng10']; i++) {
+                tilist.push(cheng10());
+            }
+            for (var i = 0; i < sets['g_chu10']; i++) {
+                tilist.push(chu10());
             }
             tilist.sort(randomSort);
             for (var i = 0; i < tilist.length; i++) {
@@ -143,20 +223,17 @@
             //竖式
             var elsslist = document.getElementById("ss-list");
             var tilist = [];
-            for (var i = 0; i < 4; i++) {
+            for (var i = 0; i < sets['s_jia100']; i++) {
                 tilist.push(jia100());
             }
-            for (var i = 0; i < 4; i++) {
+            for (var i = 0; i < sets['s_jian100']; i++) {
                 tilist.push(jian100());
             }
-            for (var i = 0; i < 2; i++) {
+            for (var i = 0; i < sets['s_chu10']; i++) {
                 tilist.push(chu10());
             }
-            for (var i = 0; i < 1; i++) {
-                tilist.push(cheng10_100());
-            }
-            for (var i = 0; i < 1; i++) {
-                tilist.push(cheng100_10());
+            for (var i = 0; i < sets['s_cheng1_100']; i++) {
+                tilist.push(cheng1_100());
             }
             tilist.sort(randomSort);
             for (var i = 0; i < tilist.length; i++) {
@@ -169,16 +246,16 @@
             //托式
             var eltslist = document.getElementById("ts-list");
             var tilist = [];
-            for (var i = 0; i < 2; i++) {
+            for (var i = 0; i < sets['t_chu']; i++) {
                 tilist.push(tuo_chu());
             }
-            for (var i = 0; i < 2; i++) {
+            for (var i = 0; i < sets['t_cheng']; i++) {
                 tilist.push(tuo_cheng());
             }
-            for (var i = 0; i < 3; i++) {
+            for (var i = 0; i < sets['t_jia']; i++) {
                 tilist.push(tuo_jia());
             }
-            for (var i = 0; i < 3; i++) {
+            for (var i = 0; i < sets['t_jian']; i++) {
                 tilist.push(tuo_jian());
             }
             tilist.sort(randomSort);
@@ -256,7 +333,7 @@
         }
 
         //乘法X*XXX
-        function cheng10_100() {
+        function cheng1_100() {
             while (true) {
                 var a;
                 if (randomNum(0, 99) > 10) {
@@ -266,14 +343,18 @@
                 }
                 var b = randomNum(101, 999);
                 if (("" + a + b).length > 3) {
-                    return ["" + a + " × " + b, a * b];
+                    if (!randomNum(0, 1)) {
+                        return ["" + a + " × " + b, a * b];
+                    } else {
+                        return ["" + b + " × " + a, a * b];
+                    }
                 }
             }
 
         }
 
         //乘法X*XXX
-        function cheng100_10() {
+        function cheng1_10() {
             while (true) {
                 var a, b;
                 if (randomNum(0, 99) > 10) {
@@ -281,13 +362,13 @@
                 } else {
                     var a = randomNum(2, 4);
                 }
-                if (randomNum(0, 99) > 3) {
-                    b = randomNum(101, 999);
-                } else {
-                    b = randomNum(11, 99);
-                }
+                b = randomNum(11, 99);
                 if (("" + a + b).length > 3) {
-                    return ["" + b + " × " + a, a * b];
+                    if (!randomNum(0, 1)) {
+                        return ["" + a + " × " + b, a * b];
+                    } else {
+                        return ["" + b + " × " + a, a * b];
+                    }
                 }
             }
 
@@ -468,6 +549,40 @@
                 els[i].style.display = "none";
             }
         }
+
+        function showset() {
+            document.getElementById("showset").style.display = "none";
+            document.getElementById("hideset").style.display = "inline-block";
+            document.getElementById("set").style.display = "inline-block";
+            var elsSets = document.getElementsByClassName('sets');
+            for (var i = 0; i < elsSets.length; i++) {
+                elsSets[i].style.display = "block";
+            }
+            var els = document.getElementsByClassName('set');
+            for (var i = 0; i < els.length; i++) {
+                els[i].value = isNaN(sets[els[i].id]) ? 0 : parseInt(sets[els[i].id]);
+            }
+        }
+
+        function hideset() {
+            document.getElementById("hideset").style.display = "none";
+            document.getElementById("set").style.display = "none";
+            document.getElementById("showset").style.display = "inline-block";
+            var elsSets = document.getElementsByClassName('sets');
+            for (var i = 0; i < elsSets.length; i++) {
+                elsSets[i].style.display = "none";
+            }
+        }
+
+        function set() {
+
+            var els = document.getElementsByClassName('set');
+            var reqs = "?";
+            for (var i = 0; i < els.length; i++) {
+                reqs = reqs + els[i].id + '=' + (isNaN(els[i].value) ? 0 : parseInt(els[i].value)) + '&';
+            }
+            location.href = reqs;
+        }
     </script>
 </head>
 <body>
@@ -475,17 +590,119 @@
     <button class="noPrint" onclick="location.reload();">换一套</button>
     <button class="noPrint" id="showda" onclick="showda()">显示答案</button>
     <button class="noPrint" id="hideda" style="display: none" onclick="hideda()">隐藏答案</button>
+
+    <button class="noPrint" id="showset" onclick="showset()">设置题型</button>
+    <button class="noPrint" id="hideset" style="display: none" onclick="hideset()">取消设置</button>
+    <button class="noPrint" id="set" style="display: none" onclick="set()">完成设置</button>
+    <p class="sets">完成设置后，重新复制保存或收藏分享地址方便以后使用。</p>
     <h3>
         一、 口算
     </h3>
+    <ul class="sets noPrint">
+        <li>
+            <lable>加法（十位）</lable>
+            <input class="set" type="number" id="k_jia10"/> 道题
+        </li>
+        <li>
+            <lable>加法（百位）</lable>
+            <input class="set" type="number" id="k_jia100"/> 道题
+        </li>
+        <li>
+            <lable>减法（十位）</lable>
+            <input class="set" type="number" id="k_jian10"/> 道题
+        </li>
+        <li>
+            <lable>减法（百位）</lable>
+            <input class="set" type="number" id="k_jian100"/> 道题
+        </li>
+        <li>
+            <lable>乘法（十位）</lable>
+            <input class="set" type="number" id="k_cheng10"/> 道题
+        </li>
+        <li>
+            <lable>除法（十位）</lable>
+            <input class="set" type="number" id="k_chu10"/> 道题
+        </li>
+        <li>
+            <lable>分数加法</lable>
+            <input class="set" type="number" id="k_fen_jia"/> 道题
+        </li>
+        <li>
+            <lable>分数减法</lable>
+            <input class="set" type="number" id="k_fen_jian"/> 道题
+        </li>
+    </ul>
+
+    <ul class="sets noPrint">
+        <li>
+            <lable>估算加法（十位）</lable>
+            <input class="set" type="number" id="g_jia10"/> 道题
+        </li>
+        <li>
+            <lable>估算加法（百位）</lable>
+            <input class="set" type="number" id="g_jia100"/> 道题
+        </li>
+        <li>
+            <lable>估算减法（十位）</lable>
+            <input class="set" type="number" id="g_jian10"/> 道题
+        </li>
+        <li>
+            <lable>估算减法（百位）</lable>
+            <input class="set" type="number" id="g_jian100"/> 道题
+        </li>
+        <li>
+            <lable>估算乘法（十位）</lable>
+            <input class="set" type="number" id="g_cheng10"/> 道题
+        </li>
+        <li>
+            <lable>估算除法（十位）</lable>
+            <input class="set" type="number" id="g_chu10"/> 道题
+        </li>
+    </ul>
     <ul id="ks-list"></ul>
     <h3>
         二、 竖式计算
     </h3>
+    <ul class="sets noPrint">
+        <li>
+            <lable>加法（百位）</lable>
+            <input class="set" type="number" id="s_jia100"/> 道题
+        </li>
+        <li>
+            <lable>减法（百位）</lable>
+            <input class="set" type="number" id="s_jian100"/> 道题
+        </li>
+        <li>
+            <lable>乘法（百位乘个位）</lable>
+            <input class="set" type="number" id="s_cheng1_100"/> 道题
+        </li>
+        <li>
+            <lable>除法（十位除个位）</lable>
+            <input class="set" type="number" id="s_chu10"/> 道题
+        </li>
+    </ul>
     <ul id="ss-list"></ul>
     <h3>
         三、 脱式计算
     </h3>
+    <ul class="sets noPrint">
+        <li>
+            <lable>加法</lable>
+            <input class="set" type="number" id="t_jia"/> 道题
+        </li>
+        <li>
+            <lable>减法</lable>
+            <input class="set" type="number" id="t_jian"/> 道题
+        </li>
+        <li>
+            <lable>乘法</lable>
+            <input class="set" type="number" id="t_cheng"/> 道题
+        </li>
+        <li>
+            <lable>除法</lable>
+            <input class="set" type="number" id="t_chu"/> 道题
+        </li>
+    </ul>
     <ul id="ts-list"></ul>
 </div>
 </body>
