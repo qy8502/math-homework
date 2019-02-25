@@ -41,7 +41,7 @@
 
         body {
             font-family: Helvetica, Hiragino Sans GB, Microsoft Yahei, sans-serif;
-            font-size: 14px;
+            font-size: 16px;
         }
 
         .sets {
@@ -55,18 +55,17 @@
         }
 
         #ks-list li, #ss-list li, #ts-list li {
-            height: 40px;
-            line-height: 30px;
-            width: 20%;
+            line-height: 62px;
+            width: 25%;
             display: inline-block;
         }
 
         #ss-list li {
-            height: 130px;
+            height: 160px;
         }
 
         #ts-list li {
-            height: 120px;
+            height: 160px;
         }
 
         span.fraction {
@@ -124,12 +123,12 @@
 
             //口算参数
             sets['k_jia10'] = isNaN(req['k_jia10']) ? 0 : req['k_jia10'];
-            sets['k_jia100'] = isNaN(req['k_jia100']) ? 1 : req['k_jia100'];
+            sets['k_jia100'] = isNaN(req['k_jia100']) ? 4 : req['k_jia100'];
             sets['k_jian10'] = isNaN(req['k_jian10']) ? 0 : req['k_jian10'];
-            sets['k_jian100'] = isNaN(req['k_jian100']) ? 1 : req['k_jian100'];
-            sets['k_cheng10'] = isNaN(req['k_cheng10']) ? 2 : req['k_cheng10'];
-            sets['k_chu10'] = isNaN(req['k_chu10']) ? 3 : req['k_chu10'];
-            sets['k_fen_jia'] = isNaN(req['k_fen_jia']) ? 1 : req['k_fen_jia'];
+            sets['k_jian100'] = isNaN(req['k_jian100']) ? 4 : req['k_jian100'];
+            sets['k_cheng10'] = isNaN(req['k_cheng10']) ? 6 : req['k_cheng10'];
+            sets['k_chu10'] = isNaN(req['k_chu10']) ? 6 : req['k_chu10'];
+            sets['k_fen_jia'] = isNaN(req['k_fen_jia']) ? 2 : req['k_fen_jia'];
             sets['k_fen_jian'] = isNaN(req['k_fen_jian']) ? 2 : req['k_fen_jian'];
 
             //估算（约定于）参数
@@ -138,18 +137,18 @@
             sets['g_jian10'] = isNaN(req['g_jian10']) ? 0 : req['g_jian10'];
             sets['g_jian100'] = isNaN(req['g_jian100']) ? 1 : req['g_jian100'];
             sets['g_cheng10'] = isNaN(req['g_cheng10']) ? 1 : req['g_cheng10'];
-            sets['g_chu10'] = isNaN(req['g_chu10']) ? 2 : req['g_chu10'];
+            sets['g_chu10'] = isNaN(req['g_chu10']) ? 1 : req['g_chu10'];
 
 
             //竖式参数
             sets['s_jia100'] = isNaN(req['s_jia100']) ? 2 : req['s_jia100'];
             sets['s_jian100'] = isNaN(req['s_jian100']) ? 2 : req['s_jian100'];
-            sets['s_chu100'] = isNaN(req['s_chu100']) ? 4 : req['s_chu100'];
+            sets['s_chu100'] = isNaN(req['s_chu100']) ? 2 : req['s_chu100'];
             sets['s_cheng1_100'] = isNaN(req['s_cheng1_100']) ? 2 : req['s_cheng1_100'];
 
 
             //托式参数
-            sets['t_chu'] = isNaN(req['t_chu']) ? 3 : req['t_chu'];
+            sets['t_chu'] = isNaN(req['t_chu']) ? 2 : req['t_chu'];
             sets['t_cheng'] = isNaN(req['t_cheng']) ? 2 : req['t_cheng'];
             sets['t_jia'] = isNaN(req['t_jia']) ? 0 : req['t_jia'];
             sets['t_jian'] = isNaN(req['t_jian']) ? 0 : req['t_jian'];
