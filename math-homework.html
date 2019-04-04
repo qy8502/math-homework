@@ -128,8 +128,8 @@
             sets['k_jian100'] = isNaN(req['k_jian100']) ? 3 : req['k_jian100'];
             sets['k_cheng10'] = isNaN(req['k_cheng10']) ? 5 : req['k_cheng10'];
             sets['k_chu10'] = isNaN(req['k_chu10']) ? 5 : req['k_chu10'];
-            sets['k_fen_jia'] = isNaN(req['k_fen_jia']) ? 2 : req['k_fen_jia'];
-            sets['k_fen_jian'] = isNaN(req['k_fen_jian']) ? 2 : req['k_fen_jian'];
+            sets['k_fen_jia'] = isNaN(req['k_fen_jia']) ? 0 : req['k_fen_jia'];
+            sets['k_fen_jian'] = isNaN(req['k_fen_jian']) ? 0 : req['k_fen_jian'];
 
             //估算（约定于）参数
             sets['g_jia10'] = isNaN(req['g_jia10']) ? 0 : req['g_jia10'];
@@ -616,7 +616,7 @@
     <button class="noPrint" id="showda" onclick="showda()">显示答案</button>
     <button class="noPrint" id="hideda" style="display: none" onclick="hideda()">隐藏答案</button>
 
-    <button class="noPrint" id="showset" style="display: none" onclick="showset()">设置题型</button>
+    <button class="noPrint" id="showset" onclick="showset()">设置题型</button>
     <button class="noPrint" id="hideset" style="display: none" onclick="hideset()">取消设置</button>
     <button class="noPrint" id="set" style="display: none" onclick="set()">完成设置</button>
     <p class="sets noPrint">完成设置后，重新复制保存或收藏分享地址方便以后使用。</p>
