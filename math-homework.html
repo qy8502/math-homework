@@ -123,11 +123,11 @@
 
             //口算参数
             sets['k_jia10'] = isNaN(req['k_jia10']) ? 0 : req['k_jia10'];
-            sets['k_jia100'] = isNaN(req['k_jia100']) ? 4 : req['k_jia100'];
+            sets['k_jia100'] = isNaN(req['k_jia100']) ? 3 : req['k_jia100'];
             sets['k_jian10'] = isNaN(req['k_jian10']) ? 0 : req['k_jian10'];
-            sets['k_jian100'] = isNaN(req['k_jian100']) ? 4 : req['k_jian100'];
-            sets['k_cheng10'] = isNaN(req['k_cheng10']) ? 6 : req['k_cheng10'];
-            sets['k_chu10'] = isNaN(req['k_chu10']) ? 6 : req['k_chu10'];
+            sets['k_jian100'] = isNaN(req['k_jian100']) ? 3 : req['k_jian100'];
+            sets['k_cheng10'] = isNaN(req['k_cheng10']) ? 5 : req['k_cheng10'];
+            sets['k_chu10'] = isNaN(req['k_chu10']) ? 5 : req['k_chu10'];
             sets['k_fen_jia'] = isNaN(req['k_fen_jia']) ? 2 : req['k_fen_jia'];
             sets['k_fen_jian'] = isNaN(req['k_fen_jian']) ? 2 : req['k_fen_jian'];
 
@@ -141,10 +141,11 @@
 
 
             //竖式参数
-            sets['s_jia100'] = isNaN(req['s_jia100']) ? 2 : req['s_jia100'];
-            sets['s_jian100'] = isNaN(req['s_jian100']) ? 2 : req['s_jian100'];
+            sets['s_jia100'] = isNaN(req['s_jia100']) ? 1 : req['s_jia100'];
+            sets['s_jian100'] = isNaN(req['s_jian100']) ? 1 : req['s_jian100'];
             sets['s_chu100'] = isNaN(req['s_chu100']) ? 2 : req['s_chu100'];
             sets['s_cheng1_100'] = isNaN(req['s_cheng1_100']) ? 2 : req['s_cheng1_100'];
+            sets['s_cheng10_10'] = isNaN(req['s_cheng10_10']) ? 2 : req['s_cheng10_10'];
 
 
             //托式参数
@@ -232,6 +233,9 @@
             }
             for (var i = 0; i < sets['s_cheng1_100']; i++) {
                 tilist.push(cheng1_100());
+            }
+            for (var i = 0; i < sets['s_cheng10_10']; i++) {
+                tilist.push(cheng10_10());
             }
             tilist.sort(randomSort);
             for (var i = 0; i < tilist.length; i++) {
@@ -330,6 +334,16 @@
 
         }
 
+        //乘法
+        function cheng10_10() {
+            while (true) {
+                var a = randomNum(11, 99);
+                var b = randomNum(11, 99);
+                return ["" + a + " × " + b, a * b];
+            }
+
+        }
+
         //乘法X*XXX
         function cheng1_100() {
             while (true) {
@@ -383,6 +397,7 @@
             }
 
         }
+
         //除法
         function chu100() {
             while (true) {
@@ -685,6 +700,10 @@
         <li>
             <lable>乘法（百位乘个位）</lable>
             <input class="set" type="number" id="s_cheng1_100"/> 道题
+        </li>
+        <li>
+            <lable>乘法（十位乘十位）</lable>
+            <input class="set" type="number" id="s_cheng10_10"/> 道题
         </li>
         <li>
             <lable>除法（百位除个位）</lable>
