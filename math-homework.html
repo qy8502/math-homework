@@ -105,6 +105,7 @@
     </style>
     <script type="text/javascript">
         var sets = {};
+
         window.onload = function () {
             function GetRequest() {
                 var url = location.search; //获取url中"?"符后的字串
@@ -123,36 +124,41 @@
 
             //口算参数
             sets['k_jia10'] = isNaN(req['k_jia10']) ? 0 : req['k_jia10'];
-            sets['k_jia100'] = isNaN(req['k_jia100']) ? 3 : req['k_jia100'];
+            sets['k_jia100'] = isNaN(req['k_jia100']) ? 1 : req['k_jia100'];
             sets['k_jian10'] = isNaN(req['k_jian10']) ? 0 : req['k_jian10'];
-            sets['k_jian100'] = isNaN(req['k_jian100']) ? 3 : req['k_jian100'];
-            sets['k_cheng10'] = isNaN(req['k_cheng10']) ? 5 : req['k_cheng10'];
-            sets['k_chu10'] = isNaN(req['k_chu10']) ? 5 : req['k_chu10'];
+            sets['k_jian100'] = isNaN(req['k_jian100']) ? 1 : req['k_jian100'];
+            sets['k_cheng1_10'] = isNaN(req['k_cheng1_10']) ? 0 : req['k_cheng1_10'];
+            sets['k_chu10_1'] = isNaN(req['k_chu10_1']) ? 7 : req['k_chu10_1'];
+            sets['k_cheng1_100'] = isNaN(req['k_cheng1_100']) ? 7 : req['k_cheng1_100'];
+            sets['k_chu100_1'] = isNaN(req['k_chu100_1']) ? 0 : req['k_chu100_1'];
             sets['k_fen_jia'] = isNaN(req['k_fen_jia']) ? 0 : req['k_fen_jia'];
             sets['k_fen_jian'] = isNaN(req['k_fen_jian']) ? 0 : req['k_fen_jian'];
 
             //估算（约定于）参数
             sets['g_jia10'] = isNaN(req['g_jia10']) ? 0 : req['g_jia10'];
-            sets['g_jia100'] = isNaN(req['g_jia100']) ? 1 : req['g_jia100'];
+            sets['g_jia100'] = isNaN(req['g_jia100']) ? 0 : req['g_jia100'];
             sets['g_jian10'] = isNaN(req['g_jian10']) ? 0 : req['g_jian10'];
-            sets['g_jian100'] = isNaN(req['g_jian100']) ? 1 : req['g_jian100'];
-            sets['g_cheng10'] = isNaN(req['g_cheng10']) ? 1 : req['g_cheng10'];
-            sets['g_chu10'] = isNaN(req['g_chu10']) ? 1 : req['g_chu10'];
+            sets['g_jian100'] = isNaN(req['g_jian100']) ? 0 : req['g_jian100'];
+            sets['g_cheng1_10'] = isNaN(req['g_cheng1_10']) ? 0 : req['g_cheng1_10'];
+            sets['g_chu10_1'] = isNaN(req['g_chu10_1']) ? 0 : req['g_chu10_1'];
 
 
             //竖式参数
             sets['s_jia100'] = isNaN(req['s_jia100']) ? 1 : req['s_jia100'];
             sets['s_jian100'] = isNaN(req['s_jian100']) ? 1 : req['s_jian100'];
-            sets['s_chu100'] = isNaN(req['s_chu100']) ? 2 : req['s_chu100'];
-            sets['s_cheng1_100'] = isNaN(req['s_cheng1_100']) ? 2 : req['s_cheng1_100'];
-            sets['s_cheng10_10'] = isNaN(req['s_cheng10_10']) ? 2 : req['s_cheng10_10'];
+            sets['s_chu100_1'] = isNaN(req['s_chu100_1']) ? 7 : req['s_chu100_1'];
+            sets['s_chu100_10'] = isNaN(req['s_chu100_10']) ? 0 : req['s_chu100_10'];
+            sets['s_cheng1_100'] = isNaN(req['s_cheng1_100']) ? 0 : req['s_cheng1_100'];
+            sets['s_cheng10_10'] = isNaN(req['s_cheng10_10']) ? 0 : req['s_cheng10_10'];
+            sets['s_cheng10_100'] = isNaN(req['s_cheng10_100']) ? 7 : req['s_cheng10_100'];
 
 
             //托式参数
-            sets['t_chu'] = isNaN(req['t_chu']) ? 2 : req['t_chu'];
-            sets['t_cheng'] = isNaN(req['t_cheng']) ? 2 : req['t_cheng'];
+            sets['t_chu'] = isNaN(req['t_chu']) ? 0 : req['t_chu'];
+            sets['t_cheng'] = isNaN(req['t_cheng']) ? 0 : req['t_cheng'];
             sets['t_jia'] = isNaN(req['t_jia']) ? 0 : req['t_jia'];
             sets['t_jian'] = isNaN(req['t_jian']) ? 0 : req['t_jian'];
+
 
             //口算 等于
             var elkslist = document.getElementById("ks-list");
@@ -169,11 +175,17 @@
             for (var i = 0; i < sets['k_jian100']; i++) {
                 tilist.push(jian100());
             }
-            for (var i = 0; i < sets['k_cheng10']; i++) {
-                tilist.push(cheng10());
+            for (var i = 0; i < sets['k_cheng1_10']; i++) {
+                tilist.push(cheng1_10());
             }
-            for (var i = 0; i < sets['k_chu10']; i++) {
-                tilist.push(chu10());
+            for (var i = 0; i < sets['k_chu10_1']; i++) {
+                tilist.push(chu10_1());
+            }
+            for (var i = 0; i < sets['k_cheng1_100']; i++) {
+                tilist.push(cheng1_100());
+            }
+            for (var i = 0; i < sets['k_chu100_1']; i++) {
+                tilist.push(chu100_1());
             }
             for (var i = 0; i < sets['k_fen_jia']; i++) {
                 tilist.push(fen_jia());
@@ -204,11 +216,11 @@
             for (var i = 0; i < sets['g_jian100']; i++) {
                 tilist.push(jian100());
             }
-            for (var i = 0; i < sets['g_cheng10']; i++) {
-                tilist.push(cheng10());
+            for (var i = 0; i < sets['g_cheng1_10']; i++) {
+                tilist.push(cheng1_10());
             }
-            for (var i = 0; i < sets['g_chu10']; i++) {
-                tilist.push(chu10());
+            for (var i = 0; i < sets['g_chu10_1']; i++) {
+                tilist.push(chu10_1());
             }
             tilist.sort(randomSort);
             for (var i = 0; i < tilist.length; i++) {
@@ -228,14 +240,20 @@
             for (var i = 0; i < sets['s_jian100']; i++) {
                 tilist.push(jian100());
             }
-            for (var i = 0; i < sets['s_chu100']; i++) {
-                tilist.push(chu100());
+            for (var i = 0; i < sets['s_chu100_1']; i++) {
+                tilist.push(chu100_1());
+            }
+            for (var i = 0; i < sets['s_chu100_10']; i++) {
+                tilist.push(chu100_10());
             }
             for (var i = 0; i < sets['s_cheng1_100']; i++) {
                 tilist.push(cheng1_100());
             }
             for (var i = 0; i < sets['s_cheng10_10']; i++) {
                 tilist.push(cheng10_10());
+            }
+            for (var i = 0; i < sets['s_cheng10_100']; i++) {
+                tilist.push(cheng10_100());
             }
             tilist.sort(randomSort);
             for (var i = 0; i < tilist.length; i++) {
@@ -322,8 +340,8 @@
 
         }
 
-        //乘法
-        function cheng10() {
+        //乘法X*XX
+        function cheng1_10() {
             while (true) {
                 var a = randomNum(3, 99);
                 var b = randomNum(3, 99);
@@ -334,7 +352,7 @@
 
         }
 
-        //乘法
+        //乘法XX*XX
         function cheng10_10() {
             while (true) {
                 var a = randomNum(11, 99);
@@ -365,16 +383,11 @@
 
         }
 
-        //乘法X*XXX
-        function cheng1_10() {
+        //乘法XX*XXX
+        function cheng10_100() {
             while (true) {
-                var a, b;
-                if (randomNum(0, 99) > 10) {
-                    var a = randomNum(5, 9);
-                } else {
-                    var a = randomNum(2, 4);
-                }
-                b = randomNum(11, 99);
+                var a = randomNum(11, 99);
+                var b = randomNum(101, 999);
                 if (("" + a + b).length > 3) {
                     if (!randomNum(0, 1)) {
                         return ["" + a + " × " + b, a * b];
@@ -386,8 +399,9 @@
 
         }
 
-        //除法
-        function chu10() {
+
+        //除法XX*X
+        function chu10_1() {
             while (true) {
                 var a = randomNum(19, 99);
                 var b = randomNum(2, 9);
@@ -398,11 +412,24 @@
 
         }
 
-        //除法
-        function chu100() {
+        //除法XXX*X
+        function chu100_1() {
             while (true) {
                 var a = randomNum(100, 999);
                 var b = randomNum(2, 9);
+                if (1 == 1) {
+                    return ["" + a + " ÷ " + b, Math.floor(a / b) + ((a % b) ? "···" + (a % b) : "")];
+                }
+            }
+
+        }
+
+
+        //除法XXX*X
+        function chu100_10() {
+            while (true) {
+                var a = randomNum(100, 9801);
+                var b = randomNum(10, 99);
                 if (1 == 1) {
                     return ["" + a + " ÷ " + b, Math.floor(a / b) + ((a % b) ? "···" + (a % b) : "")];
                 }
@@ -430,7 +457,7 @@
         //分数数加法
         function fen_jian() {
             while (true) {
-                var m
+                var m;
                 if (randomNum(0, 99) > 20) {
                     m = randomNum(5, 9);
                 } else {
@@ -643,11 +670,19 @@
         </li>
         <li>
             <lable>乘法（十位）</lable>
-            <input class="set" type="number" id="k_cheng10"/> 道题
+            <input class="set" type="number" id="k_cheng1_10"/> 道题
         </li>
         <li>
             <lable>除法（十位）</lable>
-            <input class="set" type="number" id="k_chu10"/> 道题
+            <input class="set" type="number" id="k_chu10_1"/> 道题
+        </li>
+        <li>
+            <lable>乘法（百位乘个位）</lable>
+            <input class="set" type="number" id="k_cheng1_100"/> 道题
+        </li>
+        <li>
+            <lable>除法（百位除个位）</lable>
+            <input class="set" type="number" id="k_chu100_1"/> 道题
         </li>
         <li>
             <lable>分数加法</lable>
@@ -676,12 +711,12 @@
             <input class="set" type="number" id="g_jian100"/> 道题
         </li>
         <li>
-            <lable>估算乘法（十位）</lable>
-            <input class="set" type="number" id="g_cheng10"/> 道题
+            <lable>估算乘法（个位乘十位）</lable>
+            <input class="set" type="number" id="g_cheng1_10"/> 道题
         </li>
         <li>
-            <lable>估算除法（十位）</lable>
-            <input class="set" type="number" id="g_chu10"/> 道题
+            <lable>估算除法（十位除个位）</lable>
+            <input class="set" type="number" id="g_chu10_1"/> 道题
         </li>
     </ul>
     <ul id="ks-list"></ul>
@@ -707,13 +742,13 @@
         </li>
         <li>
             <lable>除法（百位除个位）</lable>
-            <input class="set" type="number" id="s_chu100"/> 道题
+            <input class="set" type="number" id="s_chu100_1"/> 道题
         </li>
     </ul>
     <ul id="ss-list"></ul>
-    <h3>
-        三、 脱式计算
-    </h3>
+    <!--<h3>-->
+        <!--三、 脱式计算-->
+    <!--</h3>-->
     <ul class="sets noPrint">
         <li>
             <lable>加法</lable>
