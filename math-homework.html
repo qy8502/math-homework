@@ -48,23 +48,23 @@
             display: none;
         }
 
-        .sets li, #ks-list, #ks-list li, #ss-list, #ss-list li, #ts-list, #ts-list li {
+        .sets li, .list li {
             list-style: none; /* 将默认的列表符号去掉 */
             /* padding: 0; !* 将默认的内边距去掉 *!
              margin: 0; !* 将默认的外边距去掉 *!*/
         }
 
-        #ks-list li, #ss-list li, #ts-list li {
+        .list li {
             line-height: 62px;
             width: 25%;
             display: inline-block;
         }
 
-        #ss-list li {
+        #s .list li {
             height: 160px;
         }
 
-        #ts-list li {
+        #t .list li {
             height: 160px;
         }
 
@@ -104,9 +104,10 @@
         }
     </style>
     <script type="text/javascript">
-        var sets = {};
 
         window.onload = function () {
+
+
             function GetRequest() {
                 var url = location.search; //获取url中"?"符后的字串
                 var theRequest = new Object();
@@ -121,467 +122,423 @@
             }
 
             var req = GetRequest();
+            var number_big = ['一', '二', '三', '四', '五', '六', '七', '八', '九'];
+            var qs = [
+                {
+                    id: 'k', text: '口算',
+                    subs: [
+                        {id: 'k_jia10', text: '加法（十位）', count: 0, fn: jia10},
+                        {id: 'k_jia100', text: '加法（百位）', count: 1, fn: jia100},
+                        {id: 'k_jian10', text: '减法（十位）', count: 0, fn: jian10},
+                        {id: 'k_jian100', text: '减法（百位）', count: 1, fn: jian100},
+                        {id: 'k_cheng1_10', text: '乘法（十位）', count: 0, fn: cheng1_10},
+                        {id: 'k_chu10_1', text: '除法（十位）', count: 7, fn: chu10_1},
+                        {id: 'k_cheng1_100', text: '乘法（百位乘个位）', count: 7, fn: cheng1_100},
+                        {id: 'k_chu100_1', text: '除法（百位除个位）', count: 0, fn: chu100_1},
+                        {id: 'k_fen_jia', text: '分数加法', count: 0, fn: fen_jia},
+                        {id: 'k_fen_jian', text: '分数减法', count: 0, fn: fen_jian},
+                    ]
+                },
+                {
+                    id: 'g', text: '',//估算（约定于）
+                    subs: [
+                        {id: 'g_jia10', text: '估算加法（十位）', count: 0, fn: jia10},
+                        {id: 'g_jia100', text: '估算加法（百位）', count: 0, fn: jia100},
+                        {id: 'g_jian10', text: '估算减法（十位）', count: 0, fn: jian10},
+                        {id: 'g_jian100', text: '估算减法（百位）', count: 0, fn: jian100},
+                        {id: 'g_cheng1_10', text: '估算乘法（个位乘十位）', count: 0, fn: cheng1_10},
+                        {id: 'g_chu10_1', text: '估算除法（十位除个位）', count: 0, fn: chu10_1}
+                    ]
+                },
+                {
+                    id: 's', text: '竖式计算',
+                    subs: [
+                        {id: 's_jia100', text: '加法（百位）', count: 1, fn: jia100},
+                        {id: 's_jian100', text: '减法（百位）', count: 1, fn: jian100},
+                        {id: 's_chu100_1', text: '除法（百位除个位）', count: 3, fn: chu100_1},
+                        {id: 's_chu100_10', text: '除法（百位除十位）', count: 0, fn: chu100_10},
+                        {id: 's_cheng1_100', text: '乘法（百位乘个位）', count: 0, fn: cheng1_100},
+                        {id: 's_cheng10_10', text: '乘法（十位乘十位）', count: 0, fn: cheng10_10},
+                        {id: 's_cheng10_100', text: '乘法（十位乘百位）', count: 3, fn: cheng10_100},
+                    ]
+                },
+                {
+                    id: 's', text: '脱式计算',
+                    subs: [
+                        {id: 't_chu', text: '除法', count: 2, fn: tuo_chu},
+                        {id: 't_cheng', text: '乘法', count: 2, fn: tuo_cheng},
+                        {id: 't_jia', text: '加法', count: 0, fn: tuo_jia},
+                        {id: 't_jian', text: '减法', count: 0, fn: tuo_jian},
+                    ]
+                },
+            ];
 
-            //口算参数
-            sets['k_jia10'] = isNaN(req['k_jia10']) ? 0 : req['k_jia10'];
-            sets['k_jia100'] = isNaN(req['k_jia100']) ? 1 : req['k_jia100'];
-            sets['k_jian10'] = isNaN(req['k_jian10']) ? 0 : req['k_jian10'];
-            sets['k_jian100'] = isNaN(req['k_jian100']) ? 1 : req['k_jian100'];
-            sets['k_cheng1_10'] = isNaN(req['k_cheng1_10']) ? 0 : req['k_cheng1_10'];
-            sets['k_chu10_1'] = isNaN(req['k_chu10_1']) ? 7 : req['k_chu10_1'];
-            sets['k_cheng1_100'] = isNaN(req['k_cheng1_100']) ? 7 : req['k_cheng1_100'];
-            sets['k_chu100_1'] = isNaN(req['k_chu100_1']) ? 0 : req['k_chu100_1'];
-            sets['k_fen_jia'] = isNaN(req['k_fen_jia']) ? 0 : req['k_fen_jia'];
-            sets['k_fen_jian'] = isNaN(req['k_fen_jian']) ? 0 : req['k_fen_jian'];
+            var host = document.getElementById("container");
 
-            //估算（约定于）参数
-            sets['g_jia10'] = isNaN(req['g_jia10']) ? 0 : req['g_jia10'];
-            sets['g_jia100'] = isNaN(req['g_jia100']) ? 0 : req['g_jia100'];
-            sets['g_jian10'] = isNaN(req['g_jian10']) ? 0 : req['g_jian10'];
-            sets['g_jian100'] = isNaN(req['g_jian100']) ? 0 : req['g_jian100'];
-            sets['g_cheng1_10'] = isNaN(req['g_cheng1_10']) ? 0 : req['g_cheng1_10'];
-            sets['g_chu10_1'] = isNaN(req['g_chu10_1']) ? 0 : req['g_chu10_1'];
+            /**
+             * 渲染题目
+             */
+            function render() {
+                //遍历渲染大题目
+                var ti = 0;
+                for (var i = 0; i < qs.length; i++) {
+                    var q = qs[i];
+                    var el = document.createElement('div');
+                    el.id = q.id;
+                    //大题目标题
+                    if (q.text) {
+                        var titleEl = document.createElement('h3');
+                        titleEl.innerHTML = number_big[ti] + "、 " + q.text;
+                        el.appendChild(titleEl);
+                        ti++;
+                    }
+                    var setsEl = document.createElement('ul');
+                    setsEl.className = 'sets noPrint';
+                    el.appendChild(setsEl);
+                    var listEl = document.createElement('ul');
+                    listEl.className = 'list';
+                    el.appendChild(listEl);
 
+                    var list = [];
+                    //生成小题目
+                    for (var ii = 0; ii < q.subs.length; ii++) {
+                        var sub = q.subs[ii];
+                        sub.count = isNaN(req[sub.id]) ? sub.count : req[sub.id];
+                        var setsLiEl = document.createElement('li');
+                        var setsLableEl = document.createElement('lable');
+                        setsLableEl.innerHTML = sub.text;
+                        var setsInputEl = document.createElement('input');
+                        setsInputEl.className = 'set';
+                        setsInputEl.type = 'number';
+                        setsInputEl.id = sub.id;
+                        setsInputEl.value = sub.count;
+                        var setsSpanEl = document.createElement('span');
+                        setsSpanEl.innerHTML = " 道题";
+                        setsLiEl.appendChild(setsLableEl);
+                        setsLiEl.appendChild(setsInputEl);
+                        setsLiEl.appendChild(setsSpanEl);
+                        setsEl.appendChild(setsLiEl);
 
-            //竖式参数
-            sets['s_jia100'] = isNaN(req['s_jia100']) ? 1 : req['s_jia100'];
-            sets['s_jian100'] = isNaN(req['s_jian100']) ? 1 : req['s_jian100'];
-            sets['s_chu100_1'] = isNaN(req['s_chu100_1']) ? 3 : req['s_chu100_1'];
-            sets['s_chu100_10'] = isNaN(req['s_chu100_10']) ? 0 : req['s_chu100_10'];
-            sets['s_cheng1_100'] = isNaN(req['s_cheng1_100']) ? 0 : req['s_cheng1_100'];
-            sets['s_cheng10_10'] = isNaN(req['s_cheng10_10']) ? 0 : req['s_cheng10_10'];
-            sets['s_cheng10_100'] = isNaN(req['s_cheng10_100']) ? 3 : req['s_cheng10_100'];
+                        for (var iii = 0; iii < sub.count; iii++) {
+                            list.push(sub.fn());
+                        }
 
+                    }
 
-            //托式参数
-            sets['t_chu'] = isNaN(req['t_chu']) ? 2 : req['t_chu'];
-            sets['t_cheng'] = isNaN(req['t_cheng']) ? 2 : req['t_cheng'];
-            sets['t_jia'] = isNaN(req['t_jia']) ? 0 : req['t_jia'];
-            sets['t_jian'] = isNaN(req['t_jian']) ? 0 : req['t_jian'];
+                    list.sort(randomSort);
 
+                    //遍历渲染小题目
+                    for (var ii = 0; ii < list.length; ii++) {
+                        var elks = document.createElement('li');
+                        elks.innerHTML = list[ii][0] + (sub.id === 'g' ? " ≈ " : " = ") + "<span class='da'>" + list[ii][1] + "</span>";
+                        listEl.appendChild(elks);
+                    }
 
-            //口算 等于
-            var elkslist = document.getElementById("ks-list");
-            var tilist = [];
-            for (var i = 0; i < sets['k_jia10']; i++) {
-                tilist.push(jia10());
-            }
-            for (var i = 0; i < sets['k_jia100']; i++) {
-                tilist.push(jia100());
-            }
-            for (var i = 0; i < sets['k_jian10']; i++) {
-                tilist.push(jian10());
-            }
-            for (var i = 0; i < sets['k_jian100']; i++) {
-                tilist.push(jian100());
-            }
-            for (var i = 0; i < sets['k_cheng1_10']; i++) {
-                tilist.push(cheng1_10());
-            }
-            for (var i = 0; i < sets['k_chu10_1']; i++) {
-                tilist.push(chu10_1());
-            }
-            for (var i = 0; i < sets['k_cheng1_100']; i++) {
-                tilist.push(cheng1_100());
-            }
-            for (var i = 0; i < sets['k_chu100_1']; i++) {
-                tilist.push(chu100_1());
-            }
-            for (var i = 0; i < sets['k_fen_jia']; i++) {
-                tilist.push(fen_jia());
-            }
-            for (var i = 0; i < sets['k_fen_jian']; i++) {
-                tilist.push(fen_jian());
-            }
-            tilist.sort(randomSort);
-            for (var i = 0; i < tilist.length; i++) {
-                var elks = document.createElement('li');
-                //elks.setAttribute('class', 'ks');
-                elks.innerHTML = tilist[i][0] + " = " + "<span class='da'>" + tilist[i][1] + "</span>";
-                elkslist.appendChild(elks);
-            }
-
-
-            //估算（口算 约等于）
-            tilist = [];
-            for (var i = 0; i < sets['g_jia10']; i++) {
-                tilist.push(jia10());
-            }
-            for (var i = 0; i < sets['g_jia100']; i++) {
-                tilist.push(jia100());
-            }
-            for (var i = 0; i < sets['g_jian10']; i++) {
-                tilist.push(jian10());
-            }
-            for (var i = 0; i < sets['g_jian100']; i++) {
-                tilist.push(jian100());
-            }
-            for (var i = 0; i < sets['g_cheng1_10']; i++) {
-                tilist.push(cheng1_10());
-            }
-            for (var i = 0; i < sets['g_chu10_1']; i++) {
-                tilist.push(chu10_1());
-            }
-            tilist.sort(randomSort);
-            for (var i = 0; i < tilist.length; i++) {
-                var elks = document.createElement('li');
-                //elks.setAttribute('class', 'ks');
-                elks.innerHTML = tilist[i][0] + " ≈ " + "<span class='da'>" + tilist[i][1] + "</span>";
-                elkslist.appendChild(elks);
-            }
-
-
-            //竖式
-            var elsslist = document.getElementById("ss-list");
-            var tilist = [];
-            for (var i = 0; i < sets['s_jia100']; i++) {
-                tilist.push(jia100());
-            }
-            for (var i = 0; i < sets['s_jian100']; i++) {
-                tilist.push(jian100());
-            }
-            for (var i = 0; i < sets['s_chu100_1']; i++) {
-                tilist.push(chu100_1());
-            }
-            for (var i = 0; i < sets['s_chu100_10']; i++) {
-                tilist.push(chu100_10());
-            }
-            for (var i = 0; i < sets['s_cheng1_100']; i++) {
-                tilist.push(cheng1_100());
-            }
-            for (var i = 0; i < sets['s_cheng10_10']; i++) {
-                tilist.push(cheng10_10());
-            }
-            for (var i = 0; i < sets['s_cheng10_100']; i++) {
-                tilist.push(cheng10_100());
-            }
-            tilist.sort(randomSort);
-            for (var i = 0; i < tilist.length; i++) {
-                var elss = document.createElement('li');
-                elss.innerHTML = tilist[i][0] + " = " + "<span class='da'>" + tilist[i][1] + "</span>";
-                elsslist.appendChild(elss);
-            }
-
-
-            //托式
-            var eltslist = document.getElementById("ts-list");
-            var tilist = [];
-            for (var i = 0; i < sets['t_chu']; i++) {
-                tilist.push(tuo_chu());
-            }
-            for (var i = 0; i < sets['t_cheng']; i++) {
-                tilist.push(tuo_cheng());
-            }
-            for (var i = 0; i < sets['t_jia']; i++) {
-                tilist.push(tuo_jia());
-            }
-            for (var i = 0; i < sets['t_jian']; i++) {
-                tilist.push(tuo_jian());
-            }
-            tilist.sort(randomSort);
-            for (var i = 0; i < tilist.length; i++) {
-                var elts = document.createElement('li');
-                elts.innerHTML = tilist[i][0] + " = " + "<span class='da'>" + tilist[i][1] + "</span>";
-                eltslist.appendChild(elts);
-            }
-        };
-
-        //十位数加法
-        function jia10() {
-            while (true) {
-                var a = randomNum(10, 99);
-                var b = randomNum(10, 99);
-                if ((a % 10 + b % 10 > 9) ||
-                    ((a / 10) % 10 + (b / 10) % 10 > 8)) {
-                    return ["" + a + " + " + b, a + b];
+                    host.appendChild(el);
                 }
             }
 
-        }
 
-        //百位数加法
-        function jia100() {
-            while (true) {
-                var a = randomNum(100, 999);
-                var b = randomNum(100, 999);
-                if ((a % 10 + b % 10 > 9) ||
-                    ((a / 10) % 10 + (b / 10) % 10 > 8) ||
-                    ((a / 100) % 10 + (b / 100) % 10 > 8)) {
-                    return ["" + a + " + " + b, a + b];
+            //十位数加法
+            function jia10() {
+                while (true) {
+                    var a = randomNum(10, 99);
+                    var b = randomNum(10, 99);
+                    if ((a % 10 + b % 10 > 9) ||
+                        ((a / 10) % 10 + (b / 10) % 10 > 8)) {
+                        return ["" + a + " + " + b, a + b];
+                    }
                 }
+
             }
 
-        }
-
-        //十位数减法
-        function jian10() {
-            while (true) {
-                var a = randomNum(10, 99);
-                var b = randomNum(10, 99);
-                if (a > b &&
-                    (a % 10 < b % 10)) {
-                    return ["" + a + " - " + b, a - b];
+            //百位数加法
+            function jia100() {
+                while (true) {
+                    var a = randomNum(100, 999);
+                    var b = randomNum(100, 999);
+                    if ((a % 10 + b % 10 > 9) ||
+                        ((a / 10) % 10 + (b / 10) % 10 > 8) ||
+                        ((a / 100) % 10 + (b / 100) % 10 > 8)) {
+                        return ["" + a + " + " + b, a + b];
+                    }
                 }
+
             }
 
-        }
-
-        //百位数减法
-        function jian100() {
-            while (true) {
-                var a = randomNum(100, 999);
-                var b = randomNum(10, 999);
-                if (a > b &&
-                    ((a % 10 < b % 10) ||
-                        ((a / 10) % 10 < (b / 10) % 10))) {
-                    return ["" + a + " - " + b, a - b];
+            //十位数减法
+            function jian10() {
+                while (true) {
+                    var a = randomNum(10, 99);
+                    var b = randomNum(10, 99);
+                    if (a > b &&
+                        (a % 10 < b % 10)) {
+                        return ["" + a + " - " + b, a - b];
+                    }
                 }
+
             }
 
-        }
+            //百位数减法
+            function jian100() {
+                while (true) {
+                    var a = randomNum(100, 999);
+                    var b = randomNum(10, 999);
+                    if (a > b &&
+                        ((a % 10 < b % 10) ||
+                            ((a / 10) % 10 < (b / 10) % 10))) {
+                        return ["" + a + " - " + b, a - b];
+                    }
+                }
 
-        //乘法X*XX
-        function cheng1_10() {
-            while (true) {
-                var a = randomNum(3, 99);
-                var b = randomNum(3, 99);
-                if (("" + a + b).length === 3) {
+            }
+
+            //乘法X*XX
+            function cheng1_10() {
+                while (true) {
+                    var a = randomNum(3, 99);
+                    var b = randomNum(3, 99);
+                    if (("" + a + b).length === 3) {
+                        return ["" + a + " × " + b, a * b];
+                    }
+                }
+
+            }
+
+            //乘法XX*XX
+            function cheng10_10() {
+                while (true) {
+                    var a = randomNum(11, 99);
+                    var b = randomNum(11, 99);
                     return ["" + a + " × " + b, a * b];
                 }
+
             }
 
-        }
+            //乘法X*XXX
+            function cheng1_100() {
+                while (true) {
+                    var a;
+                    if (randomNum(0, 99) > 10) {
+                        var a = randomNum(5, 9);
+                    } else {
+                        var a = randomNum(2, 4);
+                    }
+                    var b = randomNum(101, 999);
+                    if (("" + a + b).length > 3) {
+                        if (!randomNum(0, 1)) {
+                            return ["" + a + " × " + b, a * b];
+                        } else {
+                            return ["" + b + " × " + a, a * b];
+                        }
+                    }
+                }
 
-        //乘法XX*XX
-        function cheng10_10() {
-            while (true) {
-                var a = randomNum(11, 99);
-                var b = randomNum(11, 99);
-                return ["" + a + " × " + b, a * b];
             }
 
-        }
+            //乘法XX*XXX
+            function cheng10_100() {
+                while (true) {
+                    var a = randomNum(11, 99);
+                    var b = randomNum(101, 999);
+                    if (("" + a + b).length > 3) {
+                        if (!randomNum(0, 1)) {
+                            return ["" + a + " × " + b, a * b];
+                        } else {
+                            return ["" + b + " × " + a, a * b];
+                        }
+                    }
+                }
 
-        //乘法X*XXX
-        function cheng1_100() {
-            while (true) {
-                var a;
-                if (randomNum(0, 99) > 10) {
-                    var a = randomNum(5, 9);
+            }
+
+
+            //除法XX*X
+            function chu10_1() {
+                while (true) {
+                    var a = randomNum(19, 99);
+                    var b = randomNum(2, 9);
+                    if (1 == 1) {
+                        return ["" + a + " ÷ " + b, Math.floor(a / b) + ((a % b) ? "···" + (a % b) : "")];
+                    }
+                }
+
+            }
+
+            //除法XXX*X
+            function chu100_1() {
+                while (true) {
+                    var a = randomNum(100, 999);
+                    var b = randomNum(2, 9);
+                    if (1 == 1) {
+                        return ["" + a + " ÷ " + b, Math.floor(a / b) + ((a % b) ? "···" + (a % b) : "")];
+                    }
+                }
+
+            }
+
+
+            //除法XXX*X
+            function chu100_10() {
+                while (true) {
+                    var a = randomNum(100, 9801);
+                    var b = randomNum(10, 99);
+                    if (1 == 1) {
+                        return ["" + a + " ÷ " + b, Math.floor(a / b) + ((a % b) ? "···" + (a % b) : "")];
+                    }
+                }
+
+            }
+
+            //分数数加法
+            function fen_jia() {
+                while (true) {
+                    var m
+                    if (randomNum(0, 99) > 10) {
+                        m = randomNum(5, 9);
+                    } else {
+                        m = randomNum(2, 4);
+                    }
+                    var z1 = randomNum(1, m - 1);
+                    var z2 = randomNum(1, m - z1);
+                    return ["<span class='fraction'><span>" + z1 + "</span><span>" + m + "</span></span> + <span class='fraction'><span>" + z2 + "</span><span>" + m + "</span></span>",
+                        (z1 + z2) === m ? "1" : "<span class='fraction'><span>" + (z1 + z2) + "</span><span>" + m + "</span></span>"];
+                }
+
+            }
+
+            //分数数加法
+            function fen_jian() {
+                while (true) {
+                    var m;
+                    if (randomNum(0, 99) > 20) {
+                        m = randomNum(5, 9);
+                    } else {
+                        m = randomNum(2, 4);
+                    }
+                    var z1 = randomNum(randomNum(0, 99) > 10 ? Math.round(m / 2) : 2, m);
+                    var z2 = randomNum(1, z1 === m || (z1 > 2 && randomNum(0, 99) > 10) ? z1 - 1 : z1);
+                    return [(z1 === m ? "1" : "<span class='fraction'><span>" + z1 + "</span><span>" + m + "</span></span>") +
+                    " - <span class='fraction'><span>" + z2 + "</span><span>" + m + "</span></span>",
+                        (z1 - z2) === 0 ? "0" : "<span class='fraction'><span>" + (z1 - z2) + "</span><span>" + m + "</span></span>"];
+                }
+
+            }
+
+            //托式加法
+            function tuo_jia() {
+                while (true) {
+                    var a = randomNum(30, 99);
+                    var b = randomNum(30, 99);
+                    if (a + b < 100) {
+                        if (randomNum(0, 1)) {
+                            return ["" + tuoshi(a, false) + " + " + b, a + b];
+                        } else {
+                            return ["" + a + " + " + tuoshi(b, false, true), a + b];
+                        }
+                    }
+                }
+
+            }
+
+            //托式减法
+            function tuo_jian() {
+                while (true) {
+                    var a = randomNum(40, 99);
+                    var b = randomNum(10, 99);
+                    if (a - b > 2) {
+                        if (randomNum(0, 1)) {
+                            return ["" + tuoshi(a, false) + " - " + b, a - b];
+                        } else {
+                            return ["" + a + " - " + tuoshi(b, true, true), a - b];
+                        }
+                    }
+                }
+
+            }
+
+
+            //托式除法
+            function tuo_chu() {
+                while (true) {
+                    var a = randomNum(19, 99);
+                    var b = randomNum(2, 9);
+                    if (a % b == 0) {
+                        if (randomNum(0, 1)) {
+                            return ["" + tuoshi(a, true) + " ÷ " + b, a / b];
+                        } else {
+                            return ["" + a + " ÷ " + tuoshi(b, true, true), a / b];
+                        }
+                    }
+                }
+
+            }
+
+            //托式乘法
+            function tuo_cheng() {
+                while (true) {
+                    var a = randomNum(2, 99);
+                    var b = randomNum(2, 99);
+                    if (a * b < 100 && a * b > 18) {
+                        if (randomNum(0, 1)) {
+                            return ["" + tuoshi(a, true) + " × " + b, a * b];
+                        } else {
+                            return ["" + a + " × " + tuoshi(b, true, true), a * b];
+                        }
+                    }
+                }
+
+            }
+
+            var chengfabiao = {};
+            for (var i = 2; i < 10; i++) {
+                for (var j = 2; j < 10; j++) {
+                    var r = i * j;
+                    if (r > 10) {
+                        if (!chengfabiao[r]) {
+                            chengfabiao[r] = [];
+                        }
+                        chengfabiao[r].push([i, j]);
+                    }
+                }
+            }
+
+            function tuoshi(r, sub, notfirst) {
+                var a, b;//, r = randomNum(min, max);
+                if (r < 10 && randomNum(0, 1)) {
+                    b = randomNum(2, 9);
+                    a = r * b;
+                    return (sub && notfirst ? "(" : "") + a + " ÷ " + b + (sub && notfirst ? ")" : "")
+                } else if (chengfabiao[r] && randomNum(0, 1)) {
+                    var i = randomNum(0, chengfabiao[r].length - 1);
+                    return "" + chengfabiao[r][i][0] + " × " + chengfabiao[r][i][1]
+                } else if (r < 20 || !randomNum(0, 1)) {
+                    b = randomNum(10, 99 - r);
+                    a = b + r;
+                    return (sub ? "(" : "") + a + " - " + b + (sub ? ")" : "")
                 } else {
-                    var a = randomNum(2, 4);
-                }
-                var b = randomNum(101, 999);
-                if (("" + a + b).length > 3) {
-                    if (!randomNum(0, 1)) {
-                        return ["" + a + " × " + b, a * b];
-                    } else {
-                        return ["" + b + " × " + a, a * b];
-                    }
+                    b = randomNum(10, r - 10);
+                    a = r - b;
+                    return (sub ? "(" : "") + a + " + " + b + (sub ? ")" : "")
                 }
             }
 
-        }
 
-        //乘法XX*XXX
-        function cheng10_100() {
-            while (true) {
-                var a = randomNum(11, 99);
-                var b = randomNum(101, 999);
-                if (("" + a + b).length > 3) {
-                    if (!randomNum(0, 1)) {
-                        return ["" + a + " × " + b, a * b];
-                    } else {
-                        return ["" + b + " × " + a, a * b];
-                    }
-                }
+            function randomNum(minNum, maxNum) {
+                var Range = maxNum - minNum;
+                var Rand = Math.random();
+                var num = minNum + Math.round(Rand * Range); //四舍五入
+                return num;
+                //return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
             }
 
-        }
-
-
-        //除法XX*X
-        function chu10_1() {
-            while (true) {
-                var a = randomNum(19, 99);
-                var b = randomNum(2, 9);
-                if (1 == 1) {
-                    return ["" + a + " ÷ " + b, Math.floor(a / b) + ((a % b) ? "···" + (a % b) : "")];
-                }
+            function randomSort(a, b) {
+                return Math.random() > 0.5 ? -1 : 1;
             }
 
-        }
+            render();
+        };
 
-        //除法XXX*X
-        function chu100_1() {
-            while (true) {
-                var a = randomNum(100, 999);
-                var b = randomNum(2, 9);
-                if (1 == 1) {
-                    return ["" + a + " ÷ " + b, Math.floor(a / b) + ((a % b) ? "···" + (a % b) : "")];
-                }
-            }
-
-        }
-
-
-        //除法XXX*X
-        function chu100_10() {
-            while (true) {
-                var a = randomNum(100, 9801);
-                var b = randomNum(10, 99);
-                if (1 == 1) {
-                    return ["" + a + " ÷ " + b, Math.floor(a / b) + ((a % b) ? "···" + (a % b) : "")];
-                }
-            }
-
-        }
-
-        //分数数加法
-        function fen_jia() {
-            while (true) {
-                var m
-                if (randomNum(0, 99) > 10) {
-                    m = randomNum(5, 9);
-                } else {
-                    m = randomNum(2, 4);
-                }
-                var z1 = randomNum(1, m - 1);
-                var z2 = randomNum(1, m - z1);
-                return ["<span class='fraction'><span>" + z1 + "</span><span>" + m + "</span></span> + <span class='fraction'><span>" + z2 + "</span><span>" + m + "</span></span>",
-                    (z1 + z2) === m ? "1" : "<span class='fraction'><span>" + (z1 + z2) + "</span><span>" + m + "</span></span>"];
-            }
-
-        }
-
-        //分数数加法
-        function fen_jian() {
-            while (true) {
-                var m;
-                if (randomNum(0, 99) > 20) {
-                    m = randomNum(5, 9);
-                } else {
-                    m = randomNum(2, 4);
-                }
-                var z1 = randomNum(randomNum(0, 99) > 10 ? Math.round(m / 2) : 2, m);
-                var z2 = randomNum(1, z1 === m || (z1 > 2 && randomNum(0, 99) > 10) ? z1 - 1 : z1);
-                return [(z1 === m ? "1" : "<span class='fraction'><span>" + z1 + "</span><span>" + m + "</span></span>") +
-                " - <span class='fraction'><span>" + z2 + "</span><span>" + m + "</span></span>",
-                    (z1 - z2) === 0 ? "0" : "<span class='fraction'><span>" + (z1 - z2) + "</span><span>" + m + "</span></span>"];
-            }
-
-        }
-
-        //托式加法
-        function tuo_jia() {
-            while (true) {
-                var a = randomNum(30, 99);
-                var b = randomNum(30, 99);
-                if (a + b < 100) {
-                    if (randomNum(0, 1)) {
-                        return ["" + tuoshi(a, false) + " + " + b, a + b];
-                    } else {
-                        return ["" + a + " + " + tuoshi(b, false, true), a + b];
-                    }
-                }
-            }
-
-        }
-
-        //托式减法
-        function tuo_jian() {
-            while (true) {
-                var a = randomNum(40, 99);
-                var b = randomNum(10, 99);
-                if (a - b > 2) {
-                    if (randomNum(0, 1)) {
-                        return ["" + tuoshi(a, false) + " - " + b, a - b];
-                    } else {
-                        return ["" + a + " - " + tuoshi(b, true, true), a - b];
-                    }
-                }
-            }
-
-        }
-
-
-        //托式除法
-        function tuo_chu() {
-            while (true) {
-                var a = randomNum(19, 99);
-                var b = randomNum(2, 9);
-                if (a % b == 0) {
-                    if (randomNum(0, 1)) {
-                        return ["" + tuoshi(a, true) + " ÷ " + b, a / b];
-                    } else {
-                        return ["" + a + " ÷ " + tuoshi(b, true, true), a / b];
-                    }
-                }
-            }
-
-        }
-
-        //托式乘法
-        function tuo_cheng() {
-            while (true) {
-                var a = randomNum(2, 99);
-                var b = randomNum(2, 99);
-                if (a * b < 100 && a * b > 18) {
-                    if (randomNum(0, 1)) {
-                        return ["" + tuoshi(a, true) + " × " + b, a * b];
-                    } else {
-                        return ["" + a + " × " + tuoshi(b, true, true), a * b];
-                    }
-                }
-            }
-
-        }
-
-        var chengfabiao = {};
-        for (var i = 2; i < 10; i++) {
-            for (var j = 2; j < 10; j++) {
-                var r = i * j;
-                if (r > 10) {
-                    if (!chengfabiao[r]) {
-                        chengfabiao[r] = [];
-                    }
-                    chengfabiao[r].push([i, j]);
-                }
-            }
-        }
-
-        function tuoshi(r, sub, notfirst) {
-            var a, b;//, r = randomNum(min, max);
-            if (r < 10 && randomNum(0, 1)) {
-                b = randomNum(2, 9);
-                a = r * b;
-                return (sub && notfirst ? "(" : "") + a + " ÷ " + b + (sub && notfirst ? ")" : "")
-            } else if (chengfabiao[r] && randomNum(0, 1)) {
-                var i = randomNum(0, chengfabiao[r].length - 1);
-                return "" + chengfabiao[r][i][0] + " × " + chengfabiao[r][i][1]
-            } else if (r < 20 || !randomNum(0, 1)) {
-                b = randomNum(10, 99 - r);
-                a = b + r;
-                return (sub ? "(" : "") + a + " - " + b + (sub ? ")" : "")
-            } else {
-                b = randomNum(10, r - 10);
-                a = r - b;
-                return (sub ? "(" : "") + a + " + " + b + (sub ? ")" : "")
-            }
-        }
-
-
-        function randomNum(minNum, maxNum) {
-            var Range = maxNum - minNum;
-            var Rand = Math.random();
-            var num = minNum + Math.round(Rand * Range); //四舍五入
-            return num;
-            //return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
-        }
-
-        function randomSort(a, b) {
-            return Math.random() > 0.5 ? -1 : 1;
-        }
 
         function showda() {
             document.getElementById("showda").style.display = "none";
@@ -634,6 +591,8 @@
             }
             location.href = reqs;
         }
+
+
     </script>
 </head>
 <body>
@@ -647,127 +606,10 @@
     <button class="noPrint" id="hideset" style="display: none" onclick="hideset()">取消设置</button>
     <button class="noPrint" id="set" style="display: none" onclick="set()">完成设置</button>
     <p class="sets noPrint">完成设置后，重新复制保存或收藏分享地址方便以后使用。</p>
-    <div></div>
-    <h3>
-        一、 口算
-    </h3>
-    <ul class="sets noPrint">
-        <li>
-            <lable>加法（十位）</lable>
-            <input class="set" type="number" id="k_jia10"/> 道题
-        </li>
-        <li>
-            <lable>加法（百位）</lable>
-            <input class="set" type="number" id="k_jia100"/> 道题
-        </li>
-        <li>
-            <lable>减法（十位）</lable>
-            <input class="set" type="number" id="k_jian10"/> 道题
-        </li>
-        <li>
-            <lable>减法（百位）</lable>
-            <input class="set" type="number" id="k_jian100"/> 道题
-        </li>
-        <li>
-            <lable>乘法（十位）</lable>
-            <input class="set" type="number" id="k_cheng1_10"/> 道题
-        </li>
-        <li>
-            <lable>除法（十位）</lable>
-            <input class="set" type="number" id="k_chu10_1"/> 道题
-        </li>
-        <li>
-            <lable>乘法（百位乘个位）</lable>
-            <input class="set" type="number" id="k_cheng1_100"/> 道题
-        </li>
-        <li>
-            <lable>除法（百位除个位）</lable>
-            <input class="set" type="number" id="k_chu100_1"/> 道题
-        </li>
-        <li>
-            <lable>分数加法</lable>
-            <input class="set" type="number" id="k_fen_jia"/> 道题
-        </li>
-        <li>
-            <lable>分数减法</lable>
-            <input class="set" type="number" id="k_fen_jian"/> 道题
-        </li>
-    </ul>
-    <ul class="sets noPrint">
-        <li>
-            <lable>估算加法（十位）</lable>
-            <input class="set" type="number" id="g_jia10"/> 道题
-        </li>
-        <li>
-            <lable>估算加法（百位）</lable>
-            <input class="set" type="number" id="g_jia100"/> 道题
-        </li>
-        <li>
-            <lable>估算减法（十位）</lable>
-            <input class="set" type="number" id="g_jian10"/> 道题
-        </li>
-        <li>
-            <lable>估算减法（百位）</lable>
-            <input class="set" type="number" id="g_jian100"/> 道题
-        </li>
-        <li>
-            <lable>估算乘法（个位乘十位）</lable>
-            <input class="set" type="number" id="g_cheng1_10"/> 道题
-        </li>
-        <li>
-            <lable>估算除法（十位除个位）</lable>
-            <input class="set" type="number" id="g_chu10_1"/> 道题
-        </li>
-    </ul>
-    <ul id="ks-list"></ul>
-    <h3>
-        二、 竖式计算
-    </h3>
-    <ul class="sets noPrint">
-        <li>
-            <lable>加法（百位）</lable>
-            <input class="set" type="number" id="s_jia100"/> 道题
-        </li>
-        <li>
-            <lable>减法（百位）</lable>
-            <input class="set" type="number" id="s_jian100"/> 道题
-        </li>
-        <li>
-            <lable>乘法（百位乘个位）</lable>
-            <input class="set" type="number" id="s_cheng1_100"/> 道题
-        </li>
-        <li>
-            <lable>乘法（十位乘十位）</lable>
-            <input class="set" type="number" id="s_cheng10_10"/> 道题
-        </li>
-        <li>
-            <lable>除法（百位除个位）</lable>
-            <input class="set" type="number" id="s_chu100_1"/> 道题
-        </li>
-    </ul>
-    <ul id="ss-list"></ul>
-    <h3>
-        三、 脱式计算
-    </h3>
-    <ul class="sets noPrint">
-        <li>
-            <lable>加法</lable>
-            <input class="set" type="number" id="t_jia"/> 道题
-        </li>
-        <li>
-            <lable>减法</lable>
-            <input class="set" type="number" id="t_jian"/> 道题
-        </li>
-        <li>
-            <lable>乘法</lable>
-            <input class="set" type="number" id="t_cheng"/> 道题
-        </li>
-        <li>
-            <lable>除法</lable>
-            <input class="set" type="number" id="t_chu"/> 道题
-        </li>
-    </ul>
-    <ul id="ts-list"></ul>
+    <div id="container">
+
+    </div>
+
 </div>
 </body>
 </html>
