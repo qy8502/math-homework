@@ -132,9 +132,12 @@
                         {id: 'k_jian10', text: '减法（十位）', count: 0, fn: jian10},
                         {id: 'k_jian100', text: '减法（百位）', count: 1, fn: jian100},
                         {id: 'k_cheng1_10', text: '乘法（十位）', count: 0, fn: cheng1_10},
-                        {id: 'k_chu10_1', text: '除法（十位）', count: 7, fn: chu10_1},
+                        {id: 'k_chu10_1', text: '除法（十位）', count: 0, fn: chu10_1},
                         {id: 'k_cheng1_100', text: '乘法（百位乘个位）', count: 7, fn: cheng1_100},
                         {id: 'k_chu100_1', text: '除法（百位除个位）', count: 0, fn: chu100_1},
+                        {id: 'k_chu100_1_zheng', text: '整除（百位除个位）', count: 7, fn: chu100_1_zheng},
+                        {id: 'k_chu100_10', text: '除法（百位除十位）', count: 0, fn: chu100_10},
+                        {id: 'k_chu100_10_zheng', text: '整除（百位除十位）', count: 0, fn: chu100_10_zheng},
                         {id: 'k_fen_jia', text: '分数加法', count: 0, fn: fen_jia},
                         {id: 'k_fen_jian', text: '分数减法', count: 0, fn: fen_jian},
                     ]
@@ -155,8 +158,9 @@
                     subs: [
                         {id: 's_jia100', text: '加法（百位）', count: 1, fn: jia100},
                         {id: 's_jian100', text: '减法（百位）', count: 1, fn: jian100},
-                        {id: 's_chu100_1', text: '除法（百位除个位）', count: 3, fn: chu100_1},
+                        {id: 's_chu100_1', text: '除法（百位除个位）', count: 0, fn: chu100_1},
                         {id: 's_chu100_10', text: '除法（百位除十位）', count: 0, fn: chu100_10},
+                        {id: 's_chu100_10_zheng', text: '整除（百位除十位）', count: 3, fn: chu100_10_zheng},
                         {id: 's_cheng1_100', text: '乘法（百位乘个位）', count: 0, fn: cheng1_100},
                         {id: 's_cheng10_10', text: '乘法（十位乘十位）', count: 0, fn: cheng10_10},
                         {id: 's_cheng10_100', text: '乘法（十位乘百位）', count: 3, fn: cheng10_100},
@@ -165,8 +169,12 @@
                 {
                     id: 's', text: '脱式计算',
                     subs: [
-                        {id: 't_chu', text: '除法', count: 2, fn: tuo_chu},
-                        {id: 't_cheng', text: '乘法', count: 2, fn: tuo_cheng},
+                        {id: 't_chu', text: '除法（十位）', count: 1, fn: tuo_chu10},
+                        {id: 't_cheng', text: '乘法（十位）', count: 1, fn: tuo_cheng10},
+                        {id: 't_jia', text: '加法（百位）', count: 1, fn: tuo_jia100},
+                        {id: 't_jian', text: '减法（百位）', count: 1, fn: tuo_jian100},
+                        {id: 't_chu', text: '除法', count: 0, fn: tuo_chu},
+                        {id: 't_cheng', text: '乘法', count: 0, fn: tuo_cheng},
                         {id: 't_jia', text: '加法', count: 0, fn: tuo_jia},
                         {id: 't_jian', text: '减法', count: 0, fn: tuo_jian},
                     ]
@@ -377,6 +385,19 @@
 
             }
 
+            //除法XXX*X整除
+            function chu100_1_zheng() {
+                while (true) {
+                    var b = randomNum(2, 9);
+                    var c = randomNum(99, 299);
+                    var a = b * c;
+                    if (a < 9999) {
+                        return ["" + a + " ÷ " + b, Math.floor(a / b) + ((a % b) ? "···" + (a % b) : "")];
+                    }
+                }
+
+            }
+
 
             //除法XXX*X
             function chu100_10() {
@@ -384,6 +405,20 @@
                     var a = randomNum(100, 9801);
                     var b = randomNum(10, 99);
                     if (1 == 1) {
+                        return ["" + a + " ÷ " + b, Math.floor(a / b) + ((a % b) ? "···" + (a % b) : "")];
+                    }
+                }
+
+            }
+
+
+            //除法XXX*XX整除
+            function chu100_10_zheng() {
+                while (true) {
+                    var b = randomNum(11, 99);
+                    var c = randomNum(3, 50);
+                    var a = b * c;
+                    if (a < 999) {
                         return ["" + a + " ÷ " + b, Math.floor(a / b) + ((a % b) ? "···" + (a % b) : "")];
                     }
                 }
@@ -490,9 +525,10 @@
 
             }
 
+
             var chengfabiao = {};
-            for (var i = 2; i < 10; i++) {
-                for (var j = 2; j < 10; j++) {
+            for (var i = 2; i < 100; i++) {
+                for (var j = 2; j < 100; j++) {
                     var r = i * j;
                     if (r > 10) {
                         if (!chengfabiao[r]) {
@@ -518,6 +554,108 @@
                     return (sub ? "(" : "") + a + " - " + b + (sub ? ")" : "")
                 } else {
                     b = randomNum(10, r - 10);
+                    a = r - b;
+                    return (sub ? "(" : "") + a + " + " + b + (sub ? ")" : "")
+                }
+            }
+
+
+            //托式加法
+            function tuo_jia100() {
+                while (true) {
+                    var a = randomNum(99, 999);
+                    var b = randomNum(99, 999);
+                    if (a + b < 999) {
+                        if (randomNum(0, 1)) {
+                            return ["" + tuoshi10(a, false) + " + " + b, a + b];
+                        } else {
+                            return ["" + a + " + " + tuoshi(b, false, true), a + b];
+                        }
+                    }
+                }
+
+            }
+
+            //托式减法
+            function tuo_jian100() {
+                while (true) {
+                    var a = randomNum(444, 999);
+                    var b = randomNum(10, 444);
+                    if (a - b > 10) {
+                        if (randomNum(0, 1)) {
+                            return ["" + tuoshi10(a, false) + " - " + b, a - b];
+                        } else {
+                            return ["" + a + " - " + tuoshi(b, true, true), a - b];
+                        }
+                    }
+                }
+
+            }
+
+
+            //托式除法
+            function tuo_chu10() {
+                while (true) {
+                    var b = randomNum(11, 99);
+                    var c = randomNum(3, 50);
+                    var a = b * c;
+                    if (a < 999) {
+                        if (randomNum(0, 1)) {
+                            return ["" + tuoshi10(a, true) + " ÷ " + b, a / b];
+                        } else {
+                            return ["" + a + " ÷ " + tuoshi10(b, true, true), a / b];
+                        }
+                    }
+                }
+
+            }
+
+            //托式乘法
+            function tuo_cheng10() {
+                while (true) {
+                    var a = randomNum(11, 999);
+                    var b = randomNum(5, 99);
+                    if (a * b < 9999 && a * b > 110) {
+                        if (randomNum(0, 1)) {
+                            return ["" + tuoshi10(a, true) + " × " + b, a * b];
+                        } else {
+                            return ["" + a + " × " + tuoshi10(b, true, true), a * b];
+                        }
+                    }
+                }
+
+            }
+
+
+            /*
+                        var chengfabiao = {};
+                        for (var i = 2; i < 10; i++) {
+                            for (var j = 2; j < 10; j++) {
+                                var r = i * j;
+                                if (r > 10) {
+                                    if (!chengfabiao[r]) {
+                                        chengfabiao[r] = [];
+                                    }
+                                    chengfabiao[r].push([i, j]);
+                                }
+                            }
+                        }*/
+
+            function tuoshi10(r, sub, notfirst) {
+                var a, b;//, r = randomNum(min, max);
+                if (r < 100 && randomNum(0, 1)) {
+                    b = randomNum(5, 49);
+                    a = r * b;
+                    return (sub && notfirst ? "(" : "") + a + " ÷ " + b + (sub && notfirst ? ")" : "")
+                } else if (chengfabiao[r] && randomNum(0, 1)) {
+                    var i = randomNum(0, chengfabiao[r].length - 1);
+                    return "" + chengfabiao[r][i][0] + " × " + chengfabiao[r][i][1]
+                } else if (r < 200 || !randomNum(0, 1)) {
+                    b = randomNum(11, 999 - r);
+                    a = b + r;
+                    return (sub ? "(" : "") + a + " - " + b + (sub ? ")" : "")
+                } else {
+                    b = randomNum(200, r - 200);
                     a = r - b;
                     return (sub ? "(" : "") + a + " + " + b + (sub ? ")" : "")
                 }
